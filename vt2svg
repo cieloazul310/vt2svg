@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+const commander = require("commander");
+const vt2svg = require('./src/vt2svg');
+
+commander
+  .version(require("./package.json").version)
+  .option('-x, --lon [lon]', 'Longitude of center')
+  .option('-y, --lat [lat]', 'Lattitude of center')
+  .option('-w, --width [width]', 'Width of output svg')
+  .option('-h, --height [height]', 'Height of output svg')
+  .option('-z, --zoom [zoom]', 'Zoom level of the view')
+  .option('-l, --layers [layers]', 'Layersets')
+  .option('--background [color]', 'Background Color')
+  .option('-f, --format [format]', 'Output Format (png or svg)')
+  .option('-o, --output [filename]', 'Output file name')
+  .parse(process.argv);
+
+const state = {
+  width: commander.width || 256,
+  height: commander.height || 256,
+  lon: commander.lon || 140.475,
+  lat: commander.lat || 36.375,
+  viewZoom: commander.zoom || 16,
+  backgroundColor: commander.background || '#fff',
+  format: commander.format || 'png',
+  layers: commander.layers || 'railcl,rdcl',
+  output: commander.output || 'output'
+};
+
+vt2svg(state);

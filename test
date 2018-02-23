@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+const commander = require('commander');
+
+commander
+  .version('0.1.0')
+  .option('-x, --lon [lon]', 'Longitude of center')
+  .option('-y, --lat [lat]', 'Lattitude of center')
+  .option('-w, --width [width]', 'Width of output svg')
+  .option('-h, --height [height]', 'Height of output svg')
+  .option('-z, --zoom [zoom]', 'Zoom level of the view')
+  .option('-l, --layers [layers]')
+  .option('--style [filename]', 'Style File')
+  .parse(process.argv);
+
+const state = {
+  width: commander.width,
+  height: commander.height,
+  lon: commander.lon,
+  lat: commander.lat,
+  viewZoom: commander.zoom
+};
+
+const initialState = {
+  width: state.width || 200,
+  height: 200,
+  lon: 140,
+  lat: 35,
+  viewZoom: 16
+};
+
+console.log(commander);
+console.log(initialState);
