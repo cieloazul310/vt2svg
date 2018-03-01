@@ -1,6 +1,9 @@
 #!/usr/bin/env node
+const jsdom = require('jsdom');
 const commander = require("commander");
 const vt2svg = require('./src/vt2svg');
+const { JSDOM } = jsdom;
+const body = new JSDOM().window.document.body;
 
 commander
   .version(require("./package.json").version)
@@ -11,20 +14,20 @@ commander
   .option('-z, --zoom [zoom]', 'Zoom level of the view')
   .option('-l, --layers [layers]', 'Layersets')
   .option('--background [color]', 'Background Color')
-  .option('-f, --format [format]', 'Output Format (png or svg)')
+  .option('--make-png', 'Add if you want to make png file')
   .option('-o, --output [filename]', 'Output file name')
   .parse(process.argv);
 
 const state = {
-  width: commander.width || 256,
-  height: commander.height || 256,
-  lon: commander.lon || 140.475,
-  lat: commander.lat || 36.375,
-  viewZoom: commander.zoom || 16,
+  width: parseFloat(commander.width) || 256,
+  height: parseFloat(commander.height) || 256,
+  lon: parseFloat(commander.lon) || 140.475,
+  lat: parseFloat(commander.lat) || 36.375,
+  viewZoom: parseFloat(commander.zoom) || 16,
   backgroundColor: commander.background || '#fff',
-  format: commander.format || 'png',
+  makePng: commander.makePng || false,
   layers: commander.layers || 'railcl,rdcl',
-  output: commander.output || 'output'
+  output: commander.output || './output.svg'
 };
 
-vt2svg(state);
+vt2svg(body, state);

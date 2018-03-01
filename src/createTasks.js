@@ -2,10 +2,9 @@ const d3tile = require('d3-tile');
 const fetch = require('node-fetch');
 const getLayers = require('./getLayers');
 
-module.exports = function createTasks(layerState, size, viewZoom, projection) {
+module.exports = function createTasks(layers, size, viewZoom, projection) {
   const tasks = [];
   const tau = 2 * Math.PI;
-  const layers = getLayers(layerState);
   for (let i = 0; i < layers.length; i++) {
     const { zoom, url } = layers[i];
     const zoomReducer = Math.pow(2, zoom - viewZoom);
