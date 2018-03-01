@@ -1,7 +1,7 @@
 {
-  "name": "csv2map",
-  "version": "1.0.0",
-  "description": "",
+  "name": "vt2svg",
+  "version": "0.0.1",
+  "description": "Make SVG Maps from GSI Vector Tiles via Command Line.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,11 +9,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chrome-launcher": "^0.10.2",
+    "chrome-remote-interface": "^0.25.5",
     "commander": "^2.14.1",
     "d3": "^4.13.0",
     "d3-tile": "0.0.4",
+    "finalhandler": "^1.1.0",
     "jsdom": "^11.6.2",
-    "node-fetch": "^2.0.0"
+    "node-fetch": "^2.0.0",
+    "serve-static": "^1.13.2"
   },
   "bin": {
     "vt2svg": "vt2svg"

@@ -7,14 +7,11 @@ const d3 = Object.assign(
   require('d3-selection'),
   require('d3-geo')
 );
-const jsdom = require('jsdom');
 const createTasks = require('./createTasks');
+const getLayers = require('./getLayers');
+const svg2png = require('./svg2png');
 
-module.exports = function(state) {
-  const { JSDOM } = jsdom;
-
-  const document = new JSDOM().window.document;
-
+module.exports = function(target, state) {
   const tau = 2 * Math.PI;
   const zoom = {
     view: state.viewZoom,
@@ -25,8 +22,7 @@ module.exports = function(state) {
     width: state.width,
     height: state.height
   };
-
-  const zoomReducer = Math.pow(2, zoom.tile - zoom.view);
+  const layers = getLayers(state.layers);
 
   const projection = d3
     .geoMercator()
@@ -37,7 +33,7 @@ module.exports = function(state) {
   const path = d3.geoPath().projection(projection);
 
   const map = d3
-    .select(document.body)
+    .select(target)
     .append('svg')
     .attr('xmlns', 'http://www.w3.org/2000/svg')
     .attr('width', size.width)
@@ -50,13 +46,15 @@ module.exports = function(state) {
     .attr('scale', projection.scale())
     .style('background-color', state.backgroundColor || undefined);
 
-  const tasks = createTasks(state.layers, size, zoom.view, projection);
+  const tasks = createTasks(layers, size, zoom.view, projection);
 
   Promise.all(tasks)
     .then(data => {
+      // Filtering
       return data.filter(d => d !== undefined);
     })
     .then(data => {
+      // Render
       map.append('g')
         .attr('fill', 'none')
         .attr('stroke', 'silver')
@@ -74,11 +72,12 @@ module.exports = function(state) {
         .attr('d', path);
     })
     .then(() => {
+      // Styling
       map.selectAll('.rvrcl')
           .attr('stroke', '#00add2');
       map.selectAll('.railcl')
           .selectAll('path')
-          .attr('stroke', v => v.properties.snglDbl === '駅部分' ? 'pink' : 'black');
+          .attr('stroke', v => v.properties.snglDbl === '駅部分' ? '#c34e67' : 'black');
     })
     .then(() => {
       const attributionSize = {
@@ -100,19 +99,26 @@ module.exports = function(state) {
                 .attr('dy', - (attributionSize.height - attributionSize.font) / 2)
                 .attr('fill', 'black')
                 .attr('font-size', `${attributionSize.font}px`)
+                .attr('font-family', 'sans-serif')
                 .attr('text-anchor', 'middle')
                 .text('Data: GSI Vector Tiles');
     })
     .then(() => {
-      const filename = `${state.output}.svg` ||  `./samples/map_${zoom.view}_${center[0]}_${center[1]}.svg`;
+      // Export
+      const paths = state.output.split('/');
+      const path = paths.length > 1 ? paths.slice(0, paths.length - 1).join('/') : './';
+      const filename = paths[paths.length - 1];
 
       fs.writeFile(
-        `${filename}`,
-        document.body.innerHTML,
+        `${path}/${paths[paths.length - 1]}`,
+        target.innerHTML,
         err => {
           if (err) throw err;
           console.log('save successful!');
           console.log(`Generated ${filename}!`);
+          if (state.makePng) {
+            svg2png(size, path, filename);
+          }
         }
       );
     })
