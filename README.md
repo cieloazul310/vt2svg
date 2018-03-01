@@ -52,14 +52,15 @@ vt2svg **--make-png**
 
 ## Samples
 
-![Sample](samples/output.png)
+![Sample](samples/gaien.png)
 
 ```Shell
-$ vt2svg -w 400 -h 400 --lon 139.7149 --lat 35.6781 -z 14 --make-png -o ./samples/output.svg
+$ vt2svg -w 1000 -h 1000 --lon 139.7149 --lat 35.6781
+ -z 14.5 --make-png -o ./samples/gaien.svg
 ```
 
 ![Sample](samples/mito.svg)
 
 ```Shell
-$ vt2svg -w 600 -h 240 --lon 140.475987 --lat 36.375470 -z 16 -l fgd --make-png -o ./samples/mito.svg
+$ vt2svg -w 600 -h 240 --lon 140.475987 --lat 36.375470 -z 16 -l fgd -o ./samples/mito.svg
 ```

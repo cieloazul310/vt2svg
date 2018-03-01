@@ -26,7 +26,7 @@ const state = {
   viewZoom: parseFloat(commander.zoom) || 16,
   backgroundColor: commander.background || '#fff',
   makePng: commander.makePng || false,
-  layers: commander.layers || 'railcl,rdcl',
+  layers: commander.layers || 'rdcl,railcl',
   output: commander.output || './output.svg'
 };
 
